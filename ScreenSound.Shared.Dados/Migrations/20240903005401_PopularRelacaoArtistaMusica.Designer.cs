@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ScreenSound.Banco;
 
@@ -11,34 +12,18 @@ using ScreenSound.Banco;
 namespace ScreenSound.Migrations
 {
     [DbContext(typeof(ScreenSoundContext))]
-    partial class ScreenSoundContextModelSnapshot : ModelSnapshot
+    [Migration("20240903005401_PopularRelacaoArtistaMusica")]
+    partial class PopularRelacaoArtistaMusica
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.14")
-                .HasAnnotation("Proxies:ChangeTracking", false)
-                .HasAnnotation("Proxies:CheckEquality", false)
-                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("GeneroMusica", b =>
-                {
-                    b.Property<int>("GenerosId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MusicasId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GenerosId", "MusicasId");
-
-                    b.HasIndex("MusicasId");
-
-                    b.ToTable("GeneroMusica", (string)null);
-                });
 
             modelBuilder.Entity("ScreenSound.Modelos.Artista", b =>
                 {
@@ -62,26 +47,7 @@ namespace ScreenSound.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Artistas", (string)null);
-                });
-
-            modelBuilder.Entity("ScreenSound.Modelos.Genero", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Generos", (string)null);
+                    b.ToTable("Artistas");
                 });
 
             modelBuilder.Entity("ScreenSound.Modelos.Musica", b =>
@@ -106,22 +72,7 @@ namespace ScreenSound.Migrations
 
                     b.HasIndex("ArtistaId");
 
-                    b.ToTable("Musicas", (string)null);
-                });
-
-            modelBuilder.Entity("GeneroMusica", b =>
-                {
-                    b.HasOne("ScreenSound.Modelos.Genero", null)
-                        .WithMany()
-                        .HasForeignKey("GenerosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ScreenSound.Modelos.Musica", null)
-                        .WithMany()
-                        .HasForeignKey("MusicasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("Musicas");
                 });
 
             modelBuilder.Entity("ScreenSound.Modelos.Musica", b =>

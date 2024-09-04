@@ -12,7 +12,7 @@ using ScreenSound.Banco;
 namespace ScreenSound.Migrations
 {
     [DbContext(typeof(ScreenSoundContext))]
-    [Migration("20231128021008_RelacionandoMusicaGenero")]
+    [Migration("20240904012939_RelacionandoMusicaGenero")]
     partial class RelacionandoMusicaGenero
     {
         /// <inheritdoc />
@@ -68,6 +68,25 @@ namespace ScreenSound.Migrations
                     b.ToTable("Artistas");
                 });
 
+            modelBuilder.Entity("ScreenSound.Modelos.Genero", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Generos");
+                });
+
             modelBuilder.Entity("ScreenSound.Modelos.Musica", b =>
                 {
                     b.Property<int>("Id")
@@ -93,28 +112,9 @@ namespace ScreenSound.Migrations
                     b.ToTable("Musicas");
                 });
 
-            modelBuilder.Entity("ScreenSound.Shared.Modelos.Modelos.Genero", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descricao")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Generos");
-                });
-
             modelBuilder.Entity("GeneroMusica", b =>
                 {
-                    b.HasOne("ScreenSound.Shared.Modelos.Modelos.Genero", null)
+                    b.HasOne("ScreenSound.Modelos.Genero", null)
                         .WithMany()
                         .HasForeignKey("GenerosId")
                         .OnDelete(DeleteBehavior.Cascade)
