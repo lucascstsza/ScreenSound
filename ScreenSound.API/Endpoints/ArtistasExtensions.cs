@@ -23,7 +23,7 @@ public static class ArtistasExtensions
 
         app.MapGet("/Artistas/{nome}", ([FromServices] DAL<Artista> dal, string nome) =>
         {
-            var artista = dal.RecuperarPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+            var artista = dal.RecuperarPor(a => a.Nome!.ToUpper().Equals(nome.ToUpper()));
             if (artista is null)
             {
                 return Results.NotFound();
@@ -82,7 +82,7 @@ public static class ArtistasExtensions
 
     private static ArtistaResponse EntityToResponse(Artista artista)
     {
-        return new ArtistaResponse(artista.Id, artista.Nome, artista.Bio, artista.FotoPerfil);
+        return new ArtistaResponse(artista.Id, artista.Nome!, artista.Bio!, artista.FotoPerfil);
     }
 
   

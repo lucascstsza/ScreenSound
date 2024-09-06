@@ -25,7 +25,7 @@ public static class GeneroExtensions
 
         app.MapGet("/Generos/{nome}", ([FromServices] DAL<Genero> dal, string nome) =>
         {
-            var genero = dal.RecuperarPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+            var genero = dal.RecuperarPor(a => a.Nome!.ToUpper().Equals(nome.ToUpper()));
             if (genero is not null)
             {
                 var response = EntityToResponse(genero!);

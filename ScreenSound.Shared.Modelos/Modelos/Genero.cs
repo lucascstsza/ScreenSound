@@ -12,7 +12,7 @@ public class Genero
     public string? Nome { get; set; } = string.Empty;
     public string? Descricao { get; set; } = string.Empty;
 
-    public virtual ICollection<Musica> Musicas { get; set; }
+    public virtual ICollection<Musica>? Musicas { get; set; }
 
     public override string ToString()
     {

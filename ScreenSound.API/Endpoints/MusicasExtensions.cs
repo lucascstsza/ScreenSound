@@ -11,7 +11,6 @@ public static class MusicasExtensions
 { 
     public static void AddEndPointsMusicas(this WebApplication app)
     {
-        #region Endpoint Músicas
         app.MapGet("/Musicas", ([FromServices] DAL<Musica> dal) =>
         {
             var musicaList = dal.Listar();
@@ -25,7 +24,7 @@ public static class MusicasExtensions
 
         app.MapGet("/Musicas/{nome}", ([FromServices] DAL<Musica> dal, string nome) =>
         {
-            var musica = dal.RecuperarPor(a => a.Nome.ToUpper().Equals(nome.ToUpper()));
+            var musica = dal.RecuperarPor(a => a.Nome!.ToUpper().Equals(nome.ToUpper()));
             if (musica is null)
             {
                 return Results.NotFound();
@@ -36,11 +35,11 @@ public static class MusicasExtensions
 
         app.MapPost("/Musicas", ([FromServices] DAL<Musica> dal, [FromServices] DAL<Genero> dalGenero,[FromBody] MusicaRequest musicaRequest) =>
         {
-            var musica = new Musica(musicaRequest.nome) 
+            var musica = new Musica(musicaRequest.Nome) 
             {                 
                 ArtistaId = musicaRequest.ArtistaId,
-                AnoLancamento = musicaRequest.anoLancamento,
-                Generos = musicaRequest.Generos is not null?GeneroRequestConverter(musicaRequest.Generos, dalGenero) :
+                AnoLancamento = musicaRequest.AnoLancamento,
+                Generos = musicaRequest.Generos is not null ? GeneroRequestConverter(musicaRequest.Generos, dalGenero) :
                 new List<Genero>()
                 
             };
@@ -65,13 +64,12 @@ public static class MusicasExtensions
             {
                 return Results.NotFound();
             }
-            musicaAAtualizar.Nome = musicaRequestEdit.nome;
-            musicaAAtualizar.AnoLancamento = musicaRequestEdit.anoLancamento;
+            musicaAAtualizar.Nome = musicaRequestEdit.Nome;
+            musicaAAtualizar.AnoLancamento = musicaRequestEdit.AnoLancamento;
 
             dal.Atualizar(musicaAAtualizar);
             return Results.Ok();
         });
-        #endregion
     }
 
     private static ICollection<Genero> GeneroRequestConverter(ICollection<GeneroRequest> generos, DAL<Genero> dalGenero)
@@ -80,7 +78,7 @@ public static class MusicasExtensions
         foreach (var item in generos)
         {
             var entity = RequestToEntity(item);
-            var genero = dalGenero.RecuperarPor(g=>g.Nome.ToUpper().Equals(item.Nome.ToUpper()));
+            var genero = dalGenero.RecuperarPor(g=>g.Nome!.ToUpper().Equals(item.Nome.ToUpper()));
             if (genero is not null)
             {
                 listaDeGeneros.Add(genero);
@@ -106,6 +104,6 @@ public static class MusicasExtensions
 
     private static MusicaResponse EntityToResponse(Musica musica)
     {
-        return new MusicaResponse(musica.Id, musica.Nome!, musica.Artista!.Id, musica.Artista.Nome, musica.AnoLancamento);
+        return new MusicaResponse(musica.Id, musica.Nome!, musica.Artista!.Id, musica.Artista.Nome!, musica.AnoLancamento);
     }
 }
