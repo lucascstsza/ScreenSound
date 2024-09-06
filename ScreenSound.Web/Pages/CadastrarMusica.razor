@@ -1,6 +1,8 @@
 ﻿@page "/CadastrarMusica"
 @inject ArtistasAPI artistasAPI
 @inject GeneroAPI generoAPI
+@inject MusicasAPI musicasAPI
+@inject NavigationManager navigationManager
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-12 my-8" Justify="Justify.Center">
 
@@ -51,6 +53,7 @@
         <div class="d-flex align-center justify-space-between mt-4">
             <MudButton Variant="Variant.Filled"
                        Color="Color.Primary"
+                       @onclick="Cadastrar"
                        Class="ml-auto">
                 Cadastrar
             </MudButton>
@@ -96,5 +99,22 @@
                 GenerosSelecionados.Add(generos);
             }
         }
+    }
+
+    private List<GeneroRequest> GenerosRequest { get; set; } = new();
+
+    public async Task Cadastrar()
+    {
+        if (GenerosSelecionados is not null)
+        {
+            foreach (var genero in GenerosSelecionados)
+            {
+                GenerosRequest.Add(new GeneroRequest(genero.Nome, genero.Descricao));
+            }
+        }
+
+        var musicaRequest = new MusicaRequest(nome!, ArtistaDaMusica!.Id, anoLancamento, GenerosRequest);
+        await musicasAPI.AddMusicaAsync(musicaRequest);
+        navigationManager.NavigateTo("/MusicasPorArtista");
     }
 }
