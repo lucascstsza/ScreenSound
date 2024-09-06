@@ -29,8 +29,8 @@ public class MusicasAPI
     {
         await _httpClient.DeleteAsync($"musicas/{id}");
     }
-    public async Task UpdateMusicaAsync(MusicaRequestEdit artista)
+    public async Task UpdateMusicaAsync(MusicaRequestEdit musica)
     {
-        await _httpClient.PutAsJsonAsync($"musicas", artista);
+        await _httpClient.PutAsJsonAsync($"musicas", musica);
     }
 }

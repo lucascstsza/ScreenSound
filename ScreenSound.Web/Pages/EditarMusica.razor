@@ -52,16 +52,23 @@
 
         <div class="d-flex align-center justify-space-between mt-4">
             <MudButton Variant="Variant.Filled"
-                       Color="Color.Primary"
                        @onclick="Deletar"
-                       Class="ml-auto">
+                       Color="Color.Secondary">
                 Deletar
             </MudButton>
-            <MudButton Variant="Variant.Filled"
-                       Color="Color.Info"
-                       Class="ml-3">
-                Voltar
-            </MudButton>
+            <div class="d-flex align-center justify-space-between mt-4">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="Editar"
+                           Color="Color.Primary">
+                    Editar
+                </MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Info"
+                           @onclick="Voltar"
+                           Class="ml-3">
+                    Voltar
+                </MudButton>
+            </div>
         </div>
 
     </MudForm>
@@ -90,6 +97,9 @@
         anoLancamento = Musica!.AnoLancamento;
         nome = Musica!.Nome;
         ArtistaDaMusica = new ArtistaResponse(Musica.ArtistaId, Musica.NomeArtista, "", "");
+        generos = await generoAPI.GetGenerosAsync();
+        artistas = await artistasAPI.GetArtistasAsync();
+
     }
 
     private void ArtistaSelecionado(ArtistaResponse artista)
@@ -111,6 +121,18 @@
     public async Task Deletar()
     {
         await musicasAPI.DeleteMusicaAsync(Musica!.Id);
+        navigationManager.NavigateTo("/MusicasPorArtista");
+    }
+
+    private async Task Editar()
+    {
+        var requestEdit = new MusicaRequestEdit(Musica!.Id, nome!, ArtistaDaMusica!.Id, anoLancamento.GetValueOrDefault());
+        await musicasAPI.UpdateMusicaAsync(requestEdit);
+        navigationManager.NavigateTo("/MusicasPorArtista");
+    }
+
+    public void Voltar()
+    {
         navigationManager.NavigateTo("/MusicasPorArtista");
     }
 }

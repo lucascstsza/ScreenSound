@@ -27,11 +27,19 @@
                        Color="Color.Secondary">
                 Deletar
             </MudButton>
-            <MudButton Variant="Variant.Filled"
-                       @onclick="Editar"
-                       Color="Color.Primary">
-                Editar
-            </MudButton>
+            <div class="d-flex align-center justify-space-between mt-4">
+                <MudButton Variant="Variant.Filled"
+                           @onclick="Editar"
+                           Color="Color.Primary">
+                    Editar
+                </MudButton>
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Info"
+                           @onclick="Voltar"
+                           Class="ml-3">
+                    Voltar
+                </MudButton>
+            </div>
         </div>
 
     </MudForm>
@@ -62,6 +70,11 @@
     {
         var requestEdit = new ArtistaRequestEdit(Artista!.Id, nome!, biografia!, Artista!.FotoPerfil);
         await artistasAPI.UpdateArtistaAsync(requestEdit);
+        navigationManager.NavigateTo("/Artistas");
+    }
+
+    public void Voltar()
+    {
         navigationManager.NavigateTo("/Artistas");
     }
 }
