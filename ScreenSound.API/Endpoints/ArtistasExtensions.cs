@@ -24,6 +24,7 @@ public static class ArtistasExtensions
                 return Results.NotFound();
             }
             var listaDeArtistaResponse = EntityListToResponseList(listaDeArtistas);
+
             return Results.Ok(listaDeArtistaResponse);
         });
 
@@ -34,6 +35,7 @@ public static class ArtistasExtensions
             {
                 return Results.NotFound();
             }
+
             return Results.Ok(EntityToResponse(artista));
         });
 
@@ -91,7 +93,7 @@ public static class ArtistasExtensions
 
             var email = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email) ? .Value ?? throw new InvalidOperationException("Pessoa não está conectada");
 
-            var pessoa = dalPessoa.RecuperarPor(p => p.Email.Equals(email)) ?? throw new InvalidOperationException("Pessoa não está conectada");
+            var pessoa = dalPessoa.RecuperarPor(p => p.Email!.Equals(email)) ?? throw new InvalidOperationException("Pessoa não está conectada");
 
             var avaliacao = artista.Avaliacoes.FirstOrDefault(a => a.ArtistaId == artista.Id && a.PessoaId == pessoa.Id);
 
@@ -107,6 +109,30 @@ public static class ArtistasExtensions
             dalArtista.Atualizar(artista);
             return Results.Created();
         });
+
+        groupBuilder.MapGet("{id}/avaliacao", ([FromServices] DAL<Artista> dalArtista, [FromServices] DAL<PessoaComAcesso> dalPessoaComAcesso, HttpContext context, int id) =>
+        {
+            var artista = dalArtista.RecuperarPor(a => a.Id == id);
+            if (artista is null)
+            {
+                return Results.NotFound();
+            }
+
+            var email = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value ?? throw new InvalidOperationException("Pessoa não está conectada");
+
+            var pessoa = dalPessoaComAcesso.RecuperarPor(p => p.Email!.Equals(email)) ?? throw new InvalidOperationException("Pessoa não está conectada");
+
+            var avaliacao = artista.Avaliacoes.FirstOrDefault(a => a.ArtistaId == artista.Id && a.PessoaId == pessoa.Id);
+
+            if (avaliacao is null)
+            {
+                return Results.Ok(new AvaliacaoArtistaResponse(id, 0));
+            }
+            else
+            {
+                return Results.Ok(new AvaliacaoArtistaResponse(id, avaliacao.Nota));
+            }
+        });
     }
 
     private static ICollection<ArtistaResponse> EntityListToResponseList(IEnumerable<Artista> listaDeArtistas)
@@ -116,7 +142,10 @@ public static class ArtistasExtensions
 
     private static ArtistaResponse EntityToResponse(Artista artista)
     {
-        return new ArtistaResponse(artista.Id, artista.Nome!, artista.Bio!, artista.FotoPerfil);
+        return new ArtistaResponse(artista.Id, artista.Nome!, artista.Bio!, artista.FotoPerfil)
+        {
+            Classificacao = artista.Avaliacoes.Select(a => a.Nota).DefaultIfEmpty(0).Average()
+        };
     }
 
   
