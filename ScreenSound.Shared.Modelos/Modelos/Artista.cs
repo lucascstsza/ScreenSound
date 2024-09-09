@@ -30,7 +30,7 @@ public class Artista
 
     public void AdicionarNota(int pessoaId, int nota)
     {
-        nota = Math.Min(Math.Max(0, nota), 5);
+        nota = Math.Clamp(nota, 1, 5);
         Avaliacoes.Add(new AvaliacaoArtista() { ArtistaId = this.Id, PessoaId = pessoaId, Nota = nota });
     }
 
