@@ -11,6 +11,7 @@ public class ScreenSoundContext: IdentityDbContext<PessoaComAcesso, PerfilDeAces
     public DbSet<Artista> Artistas { get; set; }
     public DbSet<Musica> Musicas { get; set; }
     public DbSet<Genero> Generos { get; set; }
+    public DbSet<AvaliacaoArtista> AvaliacaoArtistas { get; set; }
 
     private string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSoundV0;Integrated Security=True;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
 
@@ -41,6 +42,9 @@ public class ScreenSoundContext: IdentityDbContext<PessoaComAcesso, PerfilDeAces
         modelBuilder.Entity<Musica>()
             .HasMany(c => c.Generos)
             .WithMany(c => c.Musicas);
+
+        modelBuilder.Entity<AvaliacaoArtista>()
+            .HasKey(a => new { a.ArtistaId, a.PessoaId });
     }
 
 }

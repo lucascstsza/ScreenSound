@@ -5,7 +5,7 @@ namespace ScreenSound.Modelos;
 public class Artista 
 {
     public virtual ICollection<Musica> Musicas { get; set; } = new List<Musica>();
-    public ICollection<AvaliacaoArtista> Avaliacoes { get; set; } = new List<AvaliacaoArtista>();
+    public virtual ICollection<AvaliacaoArtista> Avaliacoes { get; set; } = new List<AvaliacaoArtista>();
 
     public Artista()
     {
