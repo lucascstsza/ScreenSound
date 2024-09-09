@@ -1,4 +1,5 @@
 ﻿@page "/login"
+@inject AuthAPI AuthAPI
 
 <MudPaper Class="px-8 pt-2 pb-4 mx-16 my-8" Justify="Justify.Center">
     <MudForm>
@@ -26,9 +27,8 @@
     private string? email;
     private string? senha;
 
-    private void FazerLogin()
+    private async Task FazerLogin()
     {
-        // Aqui você pode fazer a validação do email e senha
-        // e redirecionar o usuário para a tela principal
+        await AuthAPI.LoginAsync(email!, senha!);
     }
 }
